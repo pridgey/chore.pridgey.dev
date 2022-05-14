@@ -2,7 +2,7 @@ import { collection, getFirestore, addDoc } from "firebase/firestore";
 import { User } from "firebase/auth";
 import { useFirestore } from "solid-firebase";
 import { Switch, Match, createSignal, createEffect } from "solid-js";
-import { Input, JoinFamily, Loading } from "../";
+import { CreateFamily, JoinFamily, Loading } from "../";
 
 type FamilyProps = {
   User: User | any;
@@ -28,7 +28,7 @@ export const FamilySwitch = (props: FamilyProps) => {
           <JoinFamily />
         </Match>
         <Match when={!hasDoc()}>
-          <div>Let's create a family</div>
+          <CreateFamily />
         </Match>
         <Match when={hasDoc()}>
           <div>Doc</div>
