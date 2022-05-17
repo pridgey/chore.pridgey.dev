@@ -29,9 +29,10 @@ const App = () => {
         </Match>
         <Match when={authState.data}>
           <>
-            <FamilySwitch User={authState.data} />
             <div>Hello {authState.data.displayName}</div>
+            <div>{authState.data.uid}</div>
             <button onClick={() => auth.signOut()}>Logout</button>
+            <FamilySwitch User={authState.data} />
           </>
         </Match>
       </Switch>

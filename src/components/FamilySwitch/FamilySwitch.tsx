@@ -28,13 +28,12 @@ export const FamilySwitch = (props: FamilyProps) => {
           <JoinFamily />
         </Match>
         <Match when={!hasDoc()}>
-          <CreateFamily />
+          <CreateFamily User={props.User} />
         </Match>
         <Match when={hasDoc()}>
           <div>Doc</div>
         </Match>
       </Switch>
-      {props.User.uid}
     </>
   );
 };

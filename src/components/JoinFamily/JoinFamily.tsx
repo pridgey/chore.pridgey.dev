@@ -1,4 +1,10 @@
+import { useFirestore } from "solid-firebase";
+import { collection, getFirestore } from "firebase/firestore";
+
 export const JoinFamily = () => {
+  const db = getFirestore();
+  const family = useFirestore(collection(db, "/family"));
+
   return (
     <>
       <div>
