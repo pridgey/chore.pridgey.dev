@@ -44,6 +44,12 @@ export const JoinFamily = (props: JoinFamilyProps) => {
           updateDoc(doc(db, "/family", foundFamily().FamilyName), {
             FamilyMembers: [...currentMembers],
           });
+
+          // Create a user doc
+          setDoc(doc(db, "/users", props.User.uid), {
+            uid: props.User.uid,
+            FamilyName: foundFamily().FamilyName,
+          });
         }}
       >
         Yes
