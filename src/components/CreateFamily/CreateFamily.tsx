@@ -1,4 +1,4 @@
-import { createSignal } from "solid-js";
+import { createSignal, Show } from "solid-js";
 import { collection, doc, getFirestore, setDoc } from "firebase/firestore";
 import { useFirestore } from "solid-firebase";
 import { User } from "firebase/auth";
@@ -9,7 +9,10 @@ type FamilyProps = {
 
 export const CreateFamily = (props: FamilyProps) => {
   const [familyName, setFamilyName] = createSignal("");
+  const [familyNameTaken, setFamilyNameTaken] = createSignal(false);
+
   const db = getFirestore();
+  const family = useFirestore(collection(db, "/family"));
 
   return (
     <>
@@ -29,15 +32,37 @@ export const CreateFamily = (props: FamilyProps) => {
         type="text"
         placeholder="Family Name"
         value={familyName()}
-        onInput={(e) => setFamilyName(e.currentTarget.value)}
+        onInput={(e) => {
+          setFamilyName(e.currentTarget.value);
+          setFamilyNameTaken(
+            family.data?.some((d) => d.id === e.currentTarget.value) || false
+          );
+        }}
       />
+      <Show when={familyNameTaken()}>
+        <p>
+          {familyName()} has already been registered. If you believe this is
+          someone you know, you should request an invite
+        </p>
+      </Show>
       <button
+        disabled={familyNameTaken()}
         onClick={() => {
-          setDoc(doc(db, "/family", props.User.uid), {
-            id: props.User.uid,
-            Parent: props.User.uid,
-            FamilyName: familyName(),
-          });
+          if (!familyNameTaken()) {
+            // Create a user doc
+            setDoc(doc(db, "/users", props.User.uid), {
+              uid: props.User.uid,
+              FamilyName: familyName(),
+            });
+
+            // Create a family doc
+            setDoc(doc(db, "/family", familyName()), {
+              fid: props.User.uid,
+              Parent: props.User.uid,
+              FamilyName: familyName(),
+              FamilyMembers: [props.User.uid],
+            });
+          }
         }}
       >
         Create {familyName()} Family
