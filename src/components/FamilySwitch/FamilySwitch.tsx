@@ -2,7 +2,7 @@ import { collection, getFirestore, addDoc } from "firebase/firestore";
 import { User } from "firebase/auth";
 import { useFirestore } from "solid-firebase";
 import { Switch, Match, createSignal, createEffect } from "solid-js";
-import { CreateFamily, JoinFamily, Loading } from "../";
+import { Agenda, CreateFamily, JoinFamily, Loading } from "../";
 
 type FamilyProps = {
   User: User | any;
@@ -12,6 +12,8 @@ export const FamilySwitch = (props: FamilyProps) => {
   // Get the db
   const db = getFirestore();
   const users = useFirestore(collection(db, "/users"));
+
+  console.log("User", props.User);
 
   // Represents the current url
   const url = new URL(window.location.href);
@@ -40,7 +42,7 @@ export const FamilySwitch = (props: FamilyProps) => {
           <CreateFamily User={props.User} />
         </Match>
         <Match when={hasDoc()}>
-          <div>Doc</div>
+          <Agenda Family={props.User.FamilyName} />
         </Match>
       </Switch>
     </>

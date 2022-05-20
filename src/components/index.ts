@@ -1,3 +1,5 @@
+export * from "./AddAgenda";
+export * from "./Agenda";
 export * from "./CreateFamily";
 export * from "./FamilySwitch";
 export * from "./Input";

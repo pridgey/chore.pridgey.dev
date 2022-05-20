@@ -1,6 +1,6 @@
 /* @refresh reload */
 import { render } from "solid-js/web";
-import { FirebaseProvider } from "./providers";
+import { FirebaseProvider, UserProvider } from "./providers";
 
 import "./index.css";
 import App from "./App";
@@ -17,7 +17,9 @@ const firebaseConfig = {
 render(
   () => (
     <FirebaseProvider config={firebaseConfig}>
-      <App />
+      <UserProvider>
+        <App />
+      </UserProvider>
     </FirebaseProvider>
   ),
   document.getElementById("root") as HTMLElement

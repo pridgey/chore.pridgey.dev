@@ -3,6 +3,7 @@ import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { collection, getFirestore, addDoc } from "firebase/firestore";
 import { useAuth, useFirestore } from "solid-firebase";
 import { FamilySwitch, Loading } from "./components";
+import { useUser } from "./providers";
 
 import logo from "./logo.svg";
 import styles from "./App.module.css";
@@ -11,10 +12,18 @@ const App = () => {
   const auth = getAuth();
   const authState = useAuth(auth);
 
+  // Global user state
+  const { userState } = useUser();
+
+  createEffect(() => console.log("Da User:", userState()));
+
   // If we are not loading, there's no data, and no errors, let's try to log in
   createEffect(() => {
     if (!authState.loading && !authState.data && !authState.error) {
-      signInWithPopup(auth, new GoogleAuthProvider());
+      signInWithPopup(auth, new GoogleAuthProvider()).then((u) => {
+        // User has officially signed in
+        console.log(userState);
+      });
     }
   });
 
