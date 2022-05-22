@@ -2,6 +2,7 @@ import { createSignal, Show } from "solid-js";
 import { collection, doc, getFirestore, setDoc } from "firebase/firestore";
 import { useFirestore } from "solid-firebase";
 import { User } from "firebase/auth";
+import { useUser } from "./../../providers";
 
 type FamilyProps = {
   User: User | any;
@@ -10,6 +11,8 @@ type FamilyProps = {
 export const CreateFamily = (props: FamilyProps) => {
   const [familyName, setFamilyName] = createSignal("");
   const [familyNameTaken, setFamilyNameTaken] = createSignal(false);
+
+  const { updateFamily } = useUser();
 
   const db = getFirestore();
   const family = useFirestore(collection(db, "/family"));
@@ -54,6 +57,9 @@ export const CreateFamily = (props: FamilyProps) => {
               uid: props.User.uid,
               FamilyName: familyName(),
             });
+
+            // Update state
+            updateFamily(familyName());
 
             // Create a family doc
             setDoc(doc(db, "/family", familyName()), {

@@ -1,48 +1,30 @@
-import { collection, getFirestore, addDoc } from "firebase/firestore";
 import { User } from "firebase/auth";
-import { useFirestore } from "solid-firebase";
-import { Switch, Match, createSignal, createEffect } from "solid-js";
-import { Agenda, CreateFamily, JoinFamily, Loading } from "../";
+import { Switch, Match } from "solid-js";
+import { Agenda, CreateFamily, JoinFamily } from "../";
+import { useUser } from "./../../providers";
 
 type FamilyProps = {
   User: User | any;
 };
 
 export const FamilySwitch = (props: FamilyProps) => {
-  // Get the db
-  const db = getFirestore();
-  const users = useFirestore(collection(db, "/users"));
-
-  console.log("User", props.User);
-
   // Represents the current url
   const url = new URL(window.location.href);
 
-  // Whether or not the user has a doc, so we know where to go
-  const [hasDoc, setHasDoc] = createSignal(false);
-
-  // Most likely going to wait for the db to load, so we wrap it in a useEffect to react to updates
-  createEffect(() => {
-    // Check and see if there is a user document, and it has a family name
-    setHasDoc(
-      users.data?.some((d) => d.id === props.User.uid && d.FamilyName) || false
-    );
-  });
+  // Global state info
+  const { userState } = useUser();
 
   return (
     <>
       <Switch>
-        <Match when={users.loading}>
-          <Loading />
-        </Match>
-        <Match when={url.searchParams.get("fid") && !hasDoc()}>
+        <Match when={url.searchParams.get("fid") && !userState().FamilyName}>
           <JoinFamily Fid={url.searchParams.get("fid")!} User={props.User} />
         </Match>
-        <Match when={!hasDoc()}>
+        <Match when={!userState().FamilyName}>
           <CreateFamily User={props.User} />
         </Match>
-        <Match when={hasDoc()}>
-          <Agenda Family={props.User.FamilyName} />
+        <Match when={userState().FamilyName}>
+          <Agenda />
         </Match>
       </Switch>
     </>

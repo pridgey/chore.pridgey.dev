@@ -8,6 +8,7 @@ import {
 } from "firebase/firestore";
 import { createEffect, createSignal, Show } from "solid-js";
 import { User } from "firebase/auth";
+import { useUser } from "./../../providers";
 
 type JoinFamilyProps = {
   Fid: string;
@@ -17,9 +18,12 @@ type JoinFamilyProps = {
 export const JoinFamily = (props: JoinFamilyProps) => {
   const [foundFamily, setFoundFamily] = createSignal<any>();
 
+  const { updateFamily } = useUser();
+
   const db = getFirestore();
   const family = useFirestore(collection(db, "/family"));
 
+  // Look up the family with the given fid (family id)
   createEffect(() => {
     if (!family.loading) {
       if (family.data?.some((f) => f.fid === props.Fid)) {
@@ -44,6 +48,9 @@ export const JoinFamily = (props: JoinFamilyProps) => {
           updateDoc(doc(db, "/family", foundFamily().FamilyName), {
             FamilyMembers: [...currentMembers],
           });
+
+          // Update Family in State
+          updateFamily(foundFamily().FamilyName);
 
           // Create a user doc
           setDoc(doc(db, "/users", props.User.uid), {

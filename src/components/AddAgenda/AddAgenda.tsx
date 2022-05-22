@@ -1,15 +1,10 @@
 import { useFirestore } from "solid-firebase";
-import {
-  collection,
-  getFirestore,
-  setDoc,
-  doc,
-  updateDoc,
-} from "firebase/firestore";
-import { createSignal, createEffect } from "solid-js";
+import { collection, getFirestore, doc, updateDoc } from "firebase/firestore";
+import { createSignal, createEffect, For } from "solid-js";
+import { useUser } from "./../../providers";
+import { Cadence } from "./../../constants";
 
 type AddAgendaProps = {
-  Family: string;
   OnComplete: () => void;
 };
 
@@ -20,11 +15,20 @@ export const AddAgenda = (props: AddAgendaProps) => {
   const [choreStartDate, setChoreStartDate] = createSignal("");
   const [foundFamily, setFoundFamily] = createSignal<any>();
 
-  console.log("Family:", props.Family);
+  const { userState } = useUser();
 
   const db = getFirestore();
-  const family = useFirestore(collection(db, "/family"));
-  const users = useFirestore(collection(db, "/users"));
+  const families = useFirestore(collection(db, "/family"));
+
+  createEffect(() => {
+    if (!families.loading && families.data) {
+      let familyDoc = families.data.find(
+        (f) => f.id === userState().FamilyName
+      );
+
+      if (familyDoc) setFoundFamily(familyDoc);
+    }
+  });
 
   return (
     <>
@@ -41,13 +45,9 @@ export const AddAgenda = (props: AddAgendaProps) => {
         <option value="" disabled selected>
           Select Chore Frequency
         </option>
-        <option value="daily">Every Day</option>
-        <option value="weekly">Every Week</option>
-        <option value="biweekly">Every Other Week</option>
-        <option value="monthly">Every Month</option>
-        <option value="bimonthly">Every Other Month</option>
-        <option value="quarterly">Every 4 Months</option>
-        <option value="yearly">Every Year</option>
+        <For each={Object.entries(Cadence)}>
+          {(c) => <option value={c[0]}>{c[1].DisplayName}</option>}
+        </For>
       </select>
       <input
         type="date"
@@ -61,9 +61,9 @@ export const AddAgenda = (props: AddAgendaProps) => {
           currentChores.push({
             ChoreName: choreName(),
             ChoreFrequency: choreFrequency(),
-            choreStartDate: choreStartDate(),
+            LastCompleted: choreStartDate(),
           });
-          updateDoc(doc(db, "/family", props.Family), {
+          updateDoc(doc(db, "/family", userState().FamilyName), {
             Chores: [...currentChores],
           });
           props.OnComplete();
