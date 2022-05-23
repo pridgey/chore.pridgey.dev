@@ -59,7 +59,7 @@ export const Agenda = () => {
         <For each={done()}>
           {(d) => (
             <li>
-              {d.ChoreName} - Last Completed: {d.LastCompleted}
+              {d.ChoreName} - Last Completed: {d.LastCompleted || "Never"}
             </li>
           )}
         </For>
@@ -69,7 +69,7 @@ export const Agenda = () => {
         <For each={toDo()}>
           {(t) => (
             <li>
-              {t.ChoreName} - Last Completed: {t.LastCompleted}
+              {t.ChoreName} - Last Completed: {t.LastCompleted || "Never"}
             </li>
           )}
         </For>

@@ -9,7 +9,7 @@ export const Cadence: { [key: string]: CadenceProps } = {
   daily: {
     DisplayName: "Every Day",
     IsDone: (LC: DateTime, Today: DateTime) =>
-      Today.valueOf() <= LC.valueOf() + 86400000,
+      LC.year >= Today.year && LC.month >= Today.month && LC.day >= Today.day,
   },
   weekly: {
     DisplayName: "Every Week",
@@ -39,5 +39,9 @@ export const Cadence: { [key: string]: CadenceProps } = {
   yearly: {
     DisplayName: "Every Year",
     IsDone: (LC: DateTime, Today: DateTime) => LC.year >= Today.year,
+  },
+  once: {
+    DisplayName: "Only Once",
+    IsDone: (LC: DateTime) => LC.isValid,
   },
 };

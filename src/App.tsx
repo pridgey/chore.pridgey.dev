@@ -5,7 +5,7 @@ import { FamilySwitch, Loading } from "./components";
 import { useUser } from "./providers";
 
 import logo from "./logo.svg";
-import styles from "./App.module.css";
+import "./App.module.css";
 
 const App = () => {
   // Get auth info from firebase

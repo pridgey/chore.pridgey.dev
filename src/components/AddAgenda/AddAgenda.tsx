@@ -1,6 +1,6 @@
 import { useFirestore } from "solid-firebase";
 import { collection, getFirestore, doc, updateDoc } from "firebase/firestore";
-import { createSignal, createEffect, For } from "solid-js";
+import { createSignal, createEffect, For, Show } from "solid-js";
 import { useUser } from "./../../providers";
 import { Cadence } from "./../../constants";
 
@@ -32,36 +32,45 @@ export const AddAgenda = (props: AddAgendaProps) => {
 
   return (
     <>
-      <input
-        type="text"
-        placeholder="Chore Name"
-        value={choreName()}
-        onChange={(e) => setChoreName(e.currentTarget.value)}
-      />
-      <select
-        value={choreFrequency()}
-        onChange={(e) => setChoreFrequency(e.currentTarget.value)}
-      >
-        <option value="" disabled selected>
-          Select Chore Frequency
-        </option>
-        <For each={Object.entries(Cadence)}>
-          {(c) => <option value={c[0]}>{c[1].DisplayName}</option>}
-        </For>
-      </select>
+      <label>
+        Chore Name
+        <input
+          type="text"
+          placeholder="Chore Name"
+          value={choreName()}
+          onChange={(e) => setChoreName(e.currentTarget.value)}
+        />
+      </label>
+      <label>
+        Chore Frequency
+        <select
+          value={choreFrequency()}
+          onChange={(e) => setChoreFrequency(e.currentTarget.value)}
+        >
+          <option value="" disabled selected>
+            Select Chore Frequency
+          </option>
+          <For each={Object.entries(Cadence)}>
+            {(c) => <option value={c[0]}>{c[1].DisplayName}</option>}
+          </For>
+        </select>
+      </label>
+      {/* <label>
+
       <input
         type="date"
         placeholder="Start Date"
         value={choreStartDate()}
         onChange={(e) => setChoreStartDate(e.currentTarget.value)}
       />
+      </label> */}
       <button
         onClick={() => {
           const currentChores = [...(foundFamily()?.Chores || [])];
           currentChores.push({
             ChoreName: choreName(),
             ChoreFrequency: choreFrequency(),
-            LastCompleted: choreStartDate(),
+            LastCompleted: "",
           });
           updateDoc(doc(db, "/family", userState().FamilyName), {
             Chores: [...currentChores],
