@@ -1,5 +1,5 @@
 import { User } from "firebase/auth";
-import { Switch, Match } from "solid-js";
+import { Switch, Match, createEffect } from "solid-js";
 import { Agenda, CreateFamily, JoinFamily } from "../";
 import { useUser } from "./../../providers";
 
@@ -20,10 +20,10 @@ export const FamilySwitch = (props: FamilyProps) => {
         <Match when={url.searchParams.get("fid") && !userState().FamilyName}>
           <JoinFamily Fid={url.searchParams.get("fid")!} User={props.User} />
         </Match>
-        <Match when={!userState().FamilyName}>
+        <Match when={!userState().FamilyName?.length}>
           <CreateFamily User={props.User} />
         </Match>
-        <Match when={userState().FamilyName}>
+        <Match when={userState().FamilyName?.length}>
           <Agenda />
         </Match>
       </Switch>

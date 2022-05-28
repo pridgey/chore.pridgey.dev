@@ -1,7 +1,7 @@
 import { Switch, Match, createEffect, onMount } from "solid-js";
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { useAuth, useFirestore } from "solid-firebase";
-import { FamilySwitch, Loading } from "./components";
+import { FamilySwitch, Header, Loading } from "./components";
 import { useUser } from "./providers";
 
 import logo from "./logo.svg";
@@ -12,10 +12,14 @@ const App = () => {
   const auth = getAuth();
   const authState = useAuth(auth);
 
+  const { userState, updateUser } = useUser();
+
   // If we are not loading, there's no data, and no errors, let's try to log in
   createEffect(() => {
     if (!authState.loading && !authState.data && !authState.error) {
-      signInWithPopup(auth, new GoogleAuthProvider());
+      signInWithPopup(auth, new GoogleAuthProvider()).then((r) =>
+        updateUser(r.user.displayName || "", r.user.uid)
+      );
     }
   });
 
@@ -28,11 +32,9 @@ const App = () => {
         <Match when={authState.error}>
           <div>Error: {authState.error.message}</div>
         </Match>
-        <Match when={authState.data}>
+        <Match when={userState().UID}>
           <>
-            <div>Hello {authState.data.displayName}</div>
-            <div>{authState.data.uid}</div>
-            <button onClick={() => auth.signOut()}>Logout</button>
+            <Header />
             <FamilySwitch User={authState.data} />
           </>
         </Match>

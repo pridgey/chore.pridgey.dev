@@ -1,7 +1,13 @@
 html,
 body {
-  background-color: #fefefe;
-  font-family: "Plus Jakarta Sans", sans-serif;
+  --blue-violet-crayola: #7365b2ff;
+  --granite-gray: #60606aff;
+  --platinum: #e4e7eaff;
+  --white: #fefefeff;
+  --liberty: #62539fff;
+  --font: "Plus Jakarta Sans", sans-serif;
+  --spacing: 8px;
+  background-color: var(--white);
 }
 
 h1 {

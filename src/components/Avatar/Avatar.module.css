@@ -1,0 +1,48 @@
+.avatar {
+  height: 40px;
+  aspect-ratio: 1;
+  border-radius: 100%;
+  background-color: var(--platinum);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font);
+  font-size: 20px;
+  font-weight: 600;
+  overflow: hidden;
+  border: 1px solid var(--granite-gray);
+}
+
+.avaimg {
+  object-position: center;
+  object-fit: cover;
+  height: 40px;
+  aspect-ratio: 1;
+}
+
+.usermenu {
+  position: fixed;
+  border-radius: var(--spacing);
+  padding: var(--spacing);
+  right: calc(var(--spacing) * 2);
+  border: 1px solid var(--platinum);
+  top: 60px;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) / 2);
+  background-color: var(--white);
+}
+
+.menuoption {
+  padding: calc(var(--spacing) / 2);
+  font-family: var(--font);
+  font-size: 14px;
+  cursor: pointer;
+  border: 0px;
+  background-color: transparent;
+  border-radius: var(--spacing);
+}
+
+.menuoption:hover {
+  background-color: var(--platinum);
+}
