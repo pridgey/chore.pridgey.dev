@@ -1,0 +1,17 @@
+.container {
+  width: 100%;
+  padding: var(--spacing);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 2);
+  font-family: var(--font);
+}
+
+.title {
+  font-family: var(--font);
+  font-weight: 600;
+  font-size: 30px;
+  margin: 0;
+  text-align: center;
+}

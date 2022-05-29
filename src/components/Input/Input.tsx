@@ -1,21 +1,19 @@
 import styles from "./Input.module.css";
 
 export const Input = () => {
-  const { container, inputControl, inputLabel } = styles;
+  const { label, control } = styles;
 
   return (
-    <div class={container}>
+    <label class={label}>
+      Input Label
       <input
         type="input"
-        class={inputControl}
+        class={control}
         placeholder="Name"
         name="name"
         id="name"
         required
       />
-      <label for="name" class={inputLabel}>
-        Name
-      </label>
-    </div>
+    </label>
   );
 };

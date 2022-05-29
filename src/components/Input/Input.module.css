@@ -1,73 +1,17 @@
-.container {
-  position: relative;
-  padding: 15px 0 0;
-  margin-top: 10px;
-  width: 50%;
-}
-
-.inputControl {
-  font-family: "Poppins", sans-serif;
-  width: 100%;
-  border: 0;
-  border-bottom: 2px solid #9b9b9b;
-  outline: 0;
-  font-size: 1.3rem;
-  color: #000;
-  padding: 7px 0;
-  background: transparent;
-  transition: border-color 0.2s;
-}
-
-.inputControl::placeholder {
-  color: transparent;
-}
-
-.inputControl:placeholder-shown ~ .inputLabel {
-  font-size: 1.3rem;
-  cursor: text;
-  top: 20px;
-}
-
-.inputLabel {
-  position: absolute;
-  top: 0;
-  display: block;
-  transition: 0.2s;
-  font-size: 1rem;
-  color: #9b9b9b;
-}
-
-.inputControl:focus {
-  padding-bottom: 6px;
-  font-weight: 700;
-  border-width: 3px;
-  border-image: linear-gradient(to right, #114199, #140b8b);
-  border-image-slice: 1;
-}
-
-.inputControl:focus ~ .inputLabel {
-  position: absolute;
-  top: 0;
-  display: block;
-  transition: 0.2s;
-  font-size: 1rem;
-  color: #11998e;
-  font-weight: 700;
-}
-
-/* reset input */
-.inputControl:required,
-.inputControl:invalid {
-  box-shadow: none;
-}
-
-/* body {
-  font-family: "Poppins", sans-serif;
+.label {
+  font-family: var(--font);
+  font-size: 16px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  font-size: 1.5rem;
-  background-color: #222222;
-} */
+  gap: 4px;
+}
+
+.control {
+  font-family: var(--font);
+  font-size: 16px;
+  padding: 4px 8px;
+  background-color: var(--white);
+  border: 1px solid var(--platinum);
+  border-radius: 4px;
+  box-sizing: border-box;
+}

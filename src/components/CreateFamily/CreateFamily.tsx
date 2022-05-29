@@ -3,12 +3,17 @@ import { collection, doc, getFirestore, setDoc } from "firebase/firestore";
 import { useFirestore } from "solid-firebase";
 import { User } from "firebase/auth";
 import { useUser } from "./../../providers";
+import style from "./CreateFamily.module.css";
+import { Gardening } from "./../SVG";
+import { Input } from "./../";
 
 type FamilyProps = {
   User: User | any;
 };
 
 export const CreateFamily = (props: FamilyProps) => {
+  const { container, title } = style;
+
   const [familyName, setFamilyName] = createSignal("");
   const [familyNameTaken, setFamilyNameTaken] = createSignal(false);
 
@@ -18,19 +23,23 @@ export const CreateFamily = (props: FamilyProps) => {
   const family = useFirestore(collection(db, "/family"));
 
   return (
-    <>
-      <p>
-        Hello! Welcome to Chore. We can't seem to find you in our system, so we
-        think you might be new.
-      </p>
-      <p>
+    <div class={container}>
+      <h1 class={title}>Welcome to Chore</h1>
+      <Gardening />
+      <span>Hello There!</span>
+      <span>
+        We're looking you up in our system by your email. But we can't seem to
+        find you. So we think you might be a new user.
+      </span>
+      <span>
         If you are looking to join someone else's family, they will need to send
         you an invite link.
-      </p>
-      <p>
+      </span>
+      <span>
         Otherwise, we can help you create a household. All we need is a family
         name and you can start inviting members and setting up chores!
-      </p>
+      </span>
+      <Input />
       <input
         type="text"
         placeholder="Family Name"
@@ -73,6 +82,6 @@ export const CreateFamily = (props: FamilyProps) => {
       >
         Create {familyName()} Family
       </button>
-    </>
+    </div>
   );
 };
