@@ -1,17 +1,45 @@
 .container {
   width: 100%;
-  padding: var(--spacing);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: calc(var(--spacing) * 2);
+  gap: var(--spacing);
   font-family: var(--font);
+}
+
+.textbox {
+  padding: calc(var(--spacing) * 3);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 2);
+}
+
+.banner {
+  background-image: url("./splashbg.jpg");
+  background-position: center;
+  background-size: cover;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--spacing) * 2);
+  box-sizing: border-box;
+  width: 100%;
+  height: 200px;
+  box-shadow: var(--shadow);
 }
 
 .title {
   font-family: var(--font);
+  color: var(--white);
   font-weight: 600;
-  font-size: 30px;
+  font-size: 2.2rem;
   margin: 0;
   text-align: center;
+}
+
+.subtitle {
+  font-family: var(--font);
+  font-size: 1.3rem;
+  margin: 0;
 }

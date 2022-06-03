@@ -5,9 +5,13 @@
   padding: var(--spacing) calc(var(--spacing) * 2);
   box-sizing: border-box;
   display: flex;
+  position: sticky;
+  top: 0px;
+  z-index: 1;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  box-shadow: var(--shadow);
 }
 
 .chorelogo {

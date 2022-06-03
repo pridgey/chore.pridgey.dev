@@ -1,18 +1,32 @@
 import styles from "./Input.module.css";
+import { createSignal } from "solid-js";
 
-export const Input = () => {
+type InputProps = {
+  DefaultValue?: string;
+  Label: string;
+  Name?: string;
+  Placeholder?: string;
+  OnChange: (newValue: string) => void;
+};
+
+export const Input = (props: InputProps) => {
   const { label, control } = styles;
+
+  const [inputValue, setInput] = createSignal(props.DefaultValue || "");
 
   return (
     <label class={label}>
-      Input Label
+      {props.Label}
       <input
         type="input"
         class={control}
-        placeholder="Name"
-        name="name"
-        id="name"
-        required
+        placeholder={props.Placeholder}
+        name={props.Name}
+        value={inputValue()}
+        onInput={(e) => {
+          setInput(e.currentTarget.value);
+          props.OnChange(e.currentTarget.value);
+        }}
       />
     </label>
   );

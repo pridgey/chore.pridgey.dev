@@ -1,6 +1,7 @@
 export * from "./AddAgenda";
 export * from "./Agenda";
 export * from "./Avatar";
+export * from "./Button";
 export * from "./CreateFamily";
 export * from "./FamilySwitch";
 export * from "./Header";

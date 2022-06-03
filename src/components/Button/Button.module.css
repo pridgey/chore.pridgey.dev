@@ -1,0 +1,18 @@
+.control {
+  font-family: var(--font);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--white);
+  padding: calc(var(--spacing) * 1.5);
+  background-color: var(--liberty);
+  border: 1px solid var(--platinum);
+  border-radius: 4px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.control:disabled {
+  background-color: var(--granite-gray);
+  color: var(--platinum);
+  cursor: not-allowed;
+}
