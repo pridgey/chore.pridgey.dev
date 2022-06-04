@@ -6,6 +6,7 @@
     "start": "vite --host",
     "dev": "vite",
     "build": "vite build",
+    "postbuild": "mv public dist/assets",
     "serve": "vite preview"
   },
   "license": "MIT",
