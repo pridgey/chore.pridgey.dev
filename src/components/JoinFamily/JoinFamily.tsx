@@ -6,9 +6,11 @@ import {
   doc,
   updateDoc,
 } from "firebase/firestore";
-import { createEffect, createSignal, Show } from "solid-js";
+import { createEffect, createSignal, Match, Show, Switch } from "solid-js";
 import { User } from "firebase/auth";
 import { useUser } from "./../../providers";
+import { Button, ImageBanner } from "./../";
+import style from "./JoinFamily.module.css";
 
 type JoinFamilyProps = {
   Fid: string;
@@ -17,6 +19,8 @@ type JoinFamilyProps = {
 
 export const JoinFamily = (props: JoinFamilyProps) => {
   const [foundFamily, setFoundFamily] = createSignal<any>();
+
+  const { textbox, subtitle, bold, buttonchoice } = style;
 
   const { updateFamily } = useUser();
 
@@ -28,6 +32,8 @@ export const JoinFamily = (props: JoinFamilyProps) => {
     if (!family.loading) {
       if (family.data?.some((f) => f.fid === props.Fid)) {
         setFoundFamily(family.data.find((f) => f.fid === props.Fid));
+      } else {
+        window.location.search = "";
       }
     }
   });
@@ -35,32 +41,61 @@ export const JoinFamily = (props: JoinFamilyProps) => {
   return (
     <>
       <Show when={family.loading}>Loading...</Show>
-      <div>
-        You are being invited to join the {foundFamily()?.FamilyName} family. Do
-        you accept this invitation?
-      </div>
-      <button onClick={() => (window.location.search = "")}>No</button>
-      <button
-        onClick={() => {
-          // Join the family
-          const currentMembers = [...foundFamily().FamilyMembers];
-          currentMembers.push(props.User.uid);
-          updateDoc(doc(db, "/family", foundFamily().FamilyName), {
-            FamilyMembers: [...currentMembers],
-          });
+      <Switch>
+        <Match when={foundFamily()}>
+          <ImageBanner
+            ImageSrc="joinbg.jpg"
+            Text={`The ${foundFamily().FamilyName} Family`}
+          />
 
-          // Update Family in State
-          updateFamily(foundFamily().FamilyName);
+          <div class={textbox}>
+            <h2 class={subtitle}>You've Received a Family Invitation</h2>
+            <div>
+              You are being invited to join the{" "}
+              <span class={bold}>{`${foundFamily()?.FamilyName} `}</span>
+              family. Do you accept this invitation?
+            </div>
+            <div>
+              If you agree, you will join the family and be able to see their
+              Chore list and mark items as completed. Accepting this invitation
+              will remove you from any existing family.
+            </div>
+            <div>
+              If you do not wish to join, you will not join this family and be
+              returned to your homepage
+            </div>
+            <div class={buttonchoice}>
+              <Button
+                Danger={true}
+                OnClick={() => (window.location.search = "")}
+              >
+                No
+              </Button>
+              <Button
+                OnClick={() => {
+                  // Join the family
+                  const currentMembers = [...foundFamily().FamilyMembers];
+                  currentMembers.push(props.User.uid);
+                  updateDoc(doc(db, "/family", foundFamily().FamilyName), {
+                    FamilyMembers: [...currentMembers],
+                  });
 
-          // Create a user doc
-          setDoc(doc(db, "/users", props.User.uid), {
-            uid: props.User.uid,
-            FamilyName: foundFamily().FamilyName,
-          });
-        }}
-      >
-        Yes
-      </button>
+                  // Update Family in State
+                  updateFamily(foundFamily().FamilyName);
+
+                  // Create a user doc
+                  setDoc(doc(db, "/users", props.User.uid), {
+                    uid: props.User.uid,
+                    FamilyName: foundFamily().FamilyName,
+                  });
+                }}
+              >
+                Yes
+              </Button>
+            </div>
+          </div>
+        </Match>
+      </Switch>
     </>
   );
 };

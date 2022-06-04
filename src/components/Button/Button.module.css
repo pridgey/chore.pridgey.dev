@@ -9,10 +9,15 @@
   border-radius: 4px;
   box-sizing: border-box;
   cursor: pointer;
+  width: 100%;
 }
 
 .control:disabled {
   background-color: var(--granite-gray);
   color: var(--platinum);
   cursor: not-allowed;
+}
+
+.danger {
+  background-color: var(--orange);
 }

@@ -6,6 +6,7 @@ import { collection, getFirestore, doc, updateDoc } from "firebase/firestore";
 import { dateAtMidnight } from "../../utilities";
 import { Cadence } from "./../../constants";
 import { DateTime } from "luxon";
+import { Button, ImageBanner } from "./../";
 
 export const Agenda = () => {
   const [showAddDialog, setShowAddDialog] = createSignal(false);
@@ -53,7 +54,7 @@ export const Agenda = () => {
 
   return (
     <>
-      <h1>Agenda</h1>
+      <ImageBanner ImageSrc="agendabg.jpg" Text="Agenda" />
       <h2>Done</h2>
       <ul>
         <For each={done()}>
@@ -74,7 +75,7 @@ export const Agenda = () => {
           )}
         </For>
       </ul>
-      <button onClick={() => setShowAddDialog(true)}>Add Chore</button>
+      <Button OnClick={() => setShowAddDialog(true)}>Add New Chore</Button>
       <Show when={showAddDialog()}>
         <AddAgenda OnComplete={() => setShowAddDialog(false)} />
       </Show>

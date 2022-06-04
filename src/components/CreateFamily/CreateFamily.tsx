@@ -4,15 +4,14 @@ import { useFirestore } from "solid-firebase";
 import { User } from "firebase/auth";
 import { useUser } from "./../../providers";
 import style from "./CreateFamily.module.css";
-import { Gardening } from "./../SVG";
-import { Button, Input } from "./../";
+import { Button, ImageBanner, Input } from "./../";
 
 type FamilyProps = {
   User: User | any;
 };
 
 export const CreateFamily = (props: FamilyProps) => {
-  const { container, banner, subtitle, textbox, title } = style;
+  const { container, subtitle, textbox } = style;
 
   const [familyName, setFamilyName] = createSignal("");
   const [familyNameTaken, setFamilyNameTaken] = createSignal(false);
@@ -24,9 +23,7 @@ export const CreateFamily = (props: FamilyProps) => {
 
   return (
     <div class={container}>
-      <div class={banner}>
-        <h1 class={title}>Welcome to Chore</h1>
-      </div>
+      <ImageBanner ImageSrc="splashbg.jpg" Text="Welcome to Chore" />
       <div class={textbox}>
         <h2 class={subtitle}>Hello There!</h2>
         <span>
