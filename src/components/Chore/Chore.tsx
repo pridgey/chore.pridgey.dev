@@ -22,9 +22,11 @@ export const Chore = (props: ChoreProps) => {
       <span class={title}>{props.ChoreName}</span>
       <span class={subtitle}>
         Last Completed:{" "}
-        {DateTime.fromFormat(props.LastCompleted, "yyyy-MM-dd").toFormat(
-          "LLL dd yyyy"
-        )}
+        {props.LastCompleted === "Never"
+          ? "Never"
+          : DateTime.fromFormat(props.LastCompleted, "yyyy-MM-dd").toFormat(
+              "LLL dd yyyy"
+            )}
       </span>
     </button>
   );
