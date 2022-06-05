@@ -6,7 +6,8 @@ import { collection, getFirestore, doc, updateDoc } from "firebase/firestore";
 import { dateAtMidnight } from "../../utilities";
 import { Cadence } from "./../../constants";
 import { DateTime } from "luxon";
-import { Button, ImageBanner } from "./../";
+import { Button, Chore, ImageBanner } from "./../";
+import style from "./Agenda.module.css";
 
 export const Agenda = () => {
   const [showAddDialog, setShowAddDialog] = createSignal(false);
@@ -14,7 +15,10 @@ export const Agenda = () => {
   const [toDo, setToDo] = createSignal<any[]>([]);
   const [done, setDone] = createSignal<any[]>([]);
 
+  const [chores, setChores] = createSignal<any[]>([]);
+
   const { userState } = useUser();
+  const { container, chorelist } = style;
 
   const db = getFirestore();
   const families = useFirestore(collection(db, "/family"));
@@ -27,11 +31,19 @@ export const Agenda = () => {
 
       if (choreAgenda.length) {
         // We found chores, now to do the thing
+        setChores([...choreAgenda]);
         setToDo([]);
         setDone([]);
         choreAgenda.forEach((c) => {
+          console.log({ c });
           const lastCompleted = dateAtMidnight(c.LastCompleted);
           const today = dateAtMidnight(DateTime.local().toFormat("yyyy-MM-dd"));
+
+          console.log({
+            lastCompleted,
+            today,
+            done: Cadence[c.ChoreFrequency].IsDone(lastCompleted, today),
+          });
 
           if (Cadence[c.ChoreFrequency].IsDone(lastCompleted, today)) {
             setDone((d) => {
@@ -53,32 +65,55 @@ export const Agenda = () => {
   });
 
   return (
-    <>
+    <div class={container}>
       <ImageBanner ImageSrc="agendabg.jpg" Text="Agenda" />
-      <h2>Done</h2>
-      <ul>
-        <For each={done()}>
-          {(d) => (
-            <li>
-              {d.ChoreName} - Last Completed: {d.LastCompleted || "Never"}
-            </li>
-          )}
-        </For>
-      </ul>
-      <h2>To Do</h2>
-      <ul>
+      <div class={chorelist}>
+        {/* To-Do */}
         <For each={toDo()}>
           {(t) => (
-            <li>
-              {t.ChoreName} - Last Completed: {t.LastCompleted || "Never"}
-            </li>
+            <Chore
+              ChoreName={t.ChoreName}
+              LastCompleted={t.LastCompleted || "Never"}
+              OnClick={() => {
+                const currentChores = JSON.parse(JSON.stringify([...chores()]));
+                const thisChore = currentChores.find(
+                  (c: any) => c.ChoreID === t.ChoreID
+                );
+
+                if (thisChore) {
+                  // set it to today
+                  thisChore.LastCompleted =
+                    DateTime.local().toFormat("yyyy-MM-dd");
+
+                  updateDoc(doc(db, "/family", userState().FamilyName), {
+                    Chores: [...currentChores],
+                  });
+                } else {
+                  // Throw an error!
+                  // Toasts would be good
+                }
+              }}
+            />
           )}
         </For>
-      </ul>
+        {/* Done Chores */}
+        <For each={done()}>
+          {(d) => (
+            <Chore
+              Completed={true}
+              ChoreName={d.ChoreName}
+              LastCompleted={d.LastCompleted || "Never"}
+            />
+          )}
+        </For>
+      </div>
       <Button OnClick={() => setShowAddDialog(true)}>Add New Chore</Button>
       <Show when={showAddDialog()}>
-        <AddAgenda OnComplete={() => setShowAddDialog(false)} />
+        <AddAgenda
+          OnClose={() => setShowAddDialog(false)}
+          OnComplete={() => setShowAddDialog(false)}
+        />
       </Show>
-    </>
+    </div>
   );
 };

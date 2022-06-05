@@ -1,0 +1,40 @@
+.container {
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  grid-template-rows: min-content min-content;
+  grid-template-areas: "icon title edit" "icon subtitle edit";
+  align-items: center;
+  justify-items: flex-start;
+  border: 0px;
+  background-color: transparent;
+  gap: 0px calc(var(--spacing) * 2);
+}
+
+.indicator {
+  border-radius: 100%;
+  border: 1px solid var(--emerald);
+  width: 20px;
+  height: 20px;
+  aspect-ratio: 1;
+  grid-area: icon;
+}
+
+.complete {
+  background-color: var(--emerald);
+}
+
+.title {
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin: 0;
+  grid-area: title;
+}
+
+.subtitle {
+  font-family: var(--font);
+  font-weight: 400;
+  font-size: 1rem;
+  margin: 0;
+  grid-area: subtitle;
+}

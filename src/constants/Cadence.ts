@@ -9,7 +9,7 @@ export const Cadence: { [key: string]: CadenceProps } = {
   daily: {
     DisplayName: "Every Day",
     IsDone: (LC: DateTime, Today: DateTime) =>
-      LC.year >= Today.year && LC.month >= Today.month && LC.day >= Today.day,
+      LC.toFormat("yyyy-MM-dd") === Today.toFormat("yyyy-MM-dd"),
   },
   weekly: {
     DisplayName: "Every Week",

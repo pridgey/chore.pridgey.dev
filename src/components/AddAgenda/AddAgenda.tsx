@@ -1,11 +1,16 @@
 import { useFirestore } from "solid-firebase";
 import { collection, getFirestore, doc, updateDoc } from "firebase/firestore";
 import { createSignal, createEffect, For, Show } from "solid-js";
+import { Portal } from "solid-js/web";
 import { useUser } from "./../../providers";
 import { Cadence } from "./../../constants";
+import { Button, Dropdown, Input } from "./../";
+import style from "./AddAgenda.module.css";
+import { v4 } from "uuid";
 
 type AddAgendaProps = {
   OnComplete: () => void;
+  OnClose: () => void;
 };
 
 export const AddAgenda = (props: AddAgendaProps) => {
@@ -14,6 +19,8 @@ export const AddAgenda = (props: AddAgendaProps) => {
   const [choreFrequency, setChoreFrequency] = createSignal("");
   const [choreStartDate, setChoreStartDate] = createSignal("");
   const [foundFamily, setFoundFamily] = createSignal<any>();
+
+  const { close, shade, popup, titlebar, title } = style;
 
   const { userState } = useUser();
 
@@ -31,55 +38,52 @@ export const AddAgenda = (props: AddAgendaProps) => {
   });
 
   return (
-    <>
-      <label>
-        Chore Name
-        <input
-          type="text"
-          placeholder="Chore Name"
-          value={choreName()}
-          onChange={(e) => setChoreName(e.currentTarget.value)}
-        />
-      </label>
-      <label>
-        Chore Frequency
-        <select
-          value={choreFrequency()}
-          onChange={(e) => setChoreFrequency(e.currentTarget.value)}
-        >
-          <option value="" disabled selected>
-            Select Chore Frequency
-          </option>
-          <For each={Object.entries(Cadence)}>
-            {(c) => <option value={c[0]}>{c[1].DisplayName}</option>}
-          </For>
-        </select>
-      </label>
-      {/* <label>
+    <Portal>
+      <div class={shade}>
+        <dialog class={popup}>
+          <div class={titlebar}>
+            <h1 class={title}>Add Chore</h1>
+            <button class={close} onClick={() => props.OnClose()}>
+              x
+            </button>
+          </div>
+          <Input
+            Label="Chore Name"
+            Placeholder="Chore Name"
+            OnChange={(newValue) => setChoreName(newValue)}
+          />
 
-      <input
-        type="date"
-        placeholder="Start Date"
-        value={choreStartDate()}
-        onChange={(e) => setChoreStartDate(e.currentTarget.value)}
-      />
-      </label> */}
-      <button
-        onClick={() => {
-          const currentChores = [...(foundFamily()?.Chores || [])];
-          currentChores.push({
-            ChoreName: choreName(),
-            ChoreFrequency: choreFrequency(),
-            LastCompleted: "",
-          });
-          updateDoc(doc(db, "/family", userState().FamilyName), {
-            Chores: [...currentChores],
-          });
-          props.OnComplete();
-        }}
-      >
-        Add Chore To Agenda
-      </button>
-    </>
+          <Dropdown
+            Label="Chore Frequency"
+            Options={Object.entries(Cadence).map((c) => ({
+              id: c[0],
+              display: c[1].DisplayName,
+            }))}
+            OnChange={(selected) => setChoreFrequency(selected.id)}
+          />
+
+          <Button
+            Disabled={
+              !choreName().length || !choreFrequency().length || !foundFamily()
+            }
+            OnClick={() => {
+              const currentChores = [...(foundFamily()?.Chores || [])];
+              currentChores.push({
+                ChoreID: v4(),
+                ChoreName: choreName(),
+                ChoreFrequency: choreFrequency(),
+                LastCompleted: "",
+              });
+              updateDoc(doc(db, "/family", userState().FamilyName), {
+                Chores: [...currentChores],
+              });
+              props.OnComplete();
+            }}
+          >
+            Add Chore To Agenda
+          </Button>
+        </dialog>
+      </div>
+    </Portal>
   );
 };
