@@ -11,6 +11,14 @@ export const Cadence: { [key: string]: CadenceProps } = {
     IsDone: (LC: DateTime, Today: DateTime) =>
       LC.toFormat("yyyy-MM-dd") === Today.toFormat("yyyy-MM-dd"),
   },
+  bidaily: {
+    DisplayName: "Every Other Day",
+    IsDone: (LC: DateTime, Today: DateTime) => {
+      console.log({ LC, Today });
+      console.log("Diff", Today.diff(LC, "days"));
+      return Today.diff(LC, "days").days === 1;
+    },
+  },
   weekly: {
     DisplayName: "Every Week",
     IsDone: (LC: DateTime, Today: DateTime) =>

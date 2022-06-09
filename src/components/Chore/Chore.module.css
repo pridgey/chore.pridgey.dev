@@ -1,18 +1,24 @@
 .container {
   display: grid;
   grid-template-columns: min-content 1fr min-content;
-  grid-template-rows: min-content min-content;
-  grid-template-areas: "icon title edit" "icon subtitle edit";
+  grid-template-rows: min-content min-content min-content;
+  grid-template-areas: "icon title edit" "icon subtitle edit" "icon cadence edit";
   align-items: center;
   justify-items: flex-start;
   border: 0px;
   background-color: transparent;
   gap: 0px calc(var(--spacing) * 2);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--platinum);
+  background-color: var(--offwhite);
+  border-radius: var(--spacing);
+  padding: var(--spacing);
+  box-sizing: border-box;
 }
 
 .indicator {
   border-radius: 100%;
-  border: 1px solid var(--emerald);
+  border: 2px solid var(--emerald);
   width: 20px;
   height: 20px;
   aspect-ratio: 1;
@@ -34,7 +40,17 @@
 .subtitle {
   font-family: var(--font);
   font-weight: 400;
-  font-size: 1rem;
+  font-size: 0.8rem;
   margin: 0;
   grid-area: subtitle;
+  text-align: left;
+}
+
+.cadence {
+  font-family: var(--font);
+  font-weight: 400;
+  font-size: 0.7rem;
+  margin: 0;
+  grid-area: cadence;
+  text-align: left;
 }

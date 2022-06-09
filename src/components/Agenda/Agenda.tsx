@@ -6,7 +6,7 @@ import { collection, getFirestore, doc, updateDoc } from "firebase/firestore";
 import { dateAtMidnight } from "../../utilities";
 import { Cadence } from "./../../constants";
 import { DateTime } from "luxon";
-import { Button, Chore, ImageBanner } from "./../";
+import { Button, Chore, ImageBanner, Sticky } from "./../";
 import style from "./Agenda.module.css";
 
 export const Agenda = () => {
@@ -35,15 +35,8 @@ export const Agenda = () => {
         setToDo([]);
         setDone([]);
         choreAgenda.forEach((c) => {
-          console.log({ c });
           const lastCompleted = dateAtMidnight(c.LastCompleted);
           const today = dateAtMidnight(DateTime.local().toFormat("yyyy-MM-dd"));
-
-          console.log({
-            lastCompleted,
-            today,
-            done: Cadence[c.ChoreFrequency].IsDone(lastCompleted, today),
-          });
 
           if (Cadence[c.ChoreFrequency].IsDone(lastCompleted, today)) {
             setDone((d) => {
@@ -72,6 +65,8 @@ export const Agenda = () => {
         <For each={toDo()}>
           {(t) => (
             <Chore
+              Cadence={t.ChoreFrequency}
+              LastUser={t.LastUser}
               ChoreName={t.ChoreName}
               LastCompleted={t.LastCompleted || "Never"}
               OnClick={() => {
@@ -84,6 +79,8 @@ export const Agenda = () => {
                   // set it to today
                   thisChore.LastCompleted =
                     DateTime.local().toFormat("yyyy-MM-dd");
+                  // By this user
+                  thisChore.LastUser = userState().Name;
 
                   updateDoc(doc(db, "/family", userState().FamilyName), {
                     Chores: [...currentChores],
@@ -100,14 +97,18 @@ export const Agenda = () => {
         <For each={done()}>
           {(d) => (
             <Chore
+              Cadence={d.ChoreFrequency}
               Completed={true}
               ChoreName={d.ChoreName}
               LastCompleted={d.LastCompleted || "Never"}
+              LastUser={d.LastUser}
             />
           )}
         </For>
       </div>
-      <Button OnClick={() => setShowAddDialog(true)}>Add New Chore</Button>
+      <Sticky Bottom="0px">
+        <Button OnClick={() => setShowAddDialog(true)}>Add New Chore</Button>
+      </Sticky>
       <Show when={showAddDialog()}>
         <AddAgenda
           OnClose={() => setShowAddDialog(false)}
