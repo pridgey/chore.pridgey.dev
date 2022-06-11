@@ -31,16 +31,18 @@
   flex-direction: column;
   gap: calc(var(--spacing) / 2);
   background-color: var(--white);
+  z-index: 1;
 }
 
 .menuoption {
-  padding: calc(var(--spacing) / 2);
+  padding: calc(var(--spacing) * 2);
   font-family: var(--font);
   font-size: 14px;
   cursor: pointer;
   border: 0px;
   background-color: transparent;
   border-radius: var(--spacing);
+  text-align: left;
 }
 
 .menuoption:hover {

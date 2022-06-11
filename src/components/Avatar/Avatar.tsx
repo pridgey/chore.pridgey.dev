@@ -37,6 +37,37 @@ export const Avatar = () => {
       <Show when={menuOpen()}>
         <Portal>
           <div class={usermenu}>
+            <Show when={userState().FamilyID?.length}>
+              <button
+                class={menuoption}
+                onClick={() => {
+                  // Construct an invitation url
+                  const inviteUrl = `${window.location.origin}?fid=${
+                    userState().FamilyID
+                  }`;
+
+                  if (navigator?.clipboard) {
+                    // Copy the url with the navigator api
+                    navigator.clipboard.writeText(inviteUrl);
+                  } else {
+                    // Try the fallback
+                    const textArea = document.createElement("textarea");
+                    textArea.value = inviteUrl;
+                    textArea.style.top = "0";
+                    textArea.style.left = "0";
+                    textArea.style.position = "fixed";
+
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(textArea);
+                  }
+                }}
+              >
+                Invite to {userState().FamilyName}
+              </button>
+            </Show>
             <button
               class={menuoption}
               onClick={() => {

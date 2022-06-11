@@ -13,6 +13,7 @@ type User = {
   Name: string;
   UID: string;
   FamilyName: string;
+  FamilyID: string;
   Avatar?: string;
 };
 
@@ -24,7 +25,7 @@ type UserContextProps = {
 };
 
 const UserContext = createContext<UserContextProps>({
-  userState: () => ({ Name: "", UID: "", FamilyName: "" }),
+  userState: () => ({ Name: "", UID: "", FamilyName: "", FamilyID: "" }),
   updateUser: () => undefined,
   updateFamily: () => undefined,
   logout: () => undefined,
@@ -36,6 +37,7 @@ export const UserProvider = (props: any) => {
     Name: "",
     UID: "",
     FamilyName: "",
+    FamilyID: "",
   });
 
   // Grab user information from firebase
@@ -81,6 +83,7 @@ export const UserProvider = (props: any) => {
         setUserState((u) => ({
           ...u,
           FamilyName: familyDoc?.FamilyName,
+          FamilyID: familyDoc?.fid,
         }));
       }
     }
@@ -108,6 +111,7 @@ export const UserProvider = (props: any) => {
         Name: "",
         UID: "",
         Avatar: "",
+        FamilyID: "",
       });
     },
   };

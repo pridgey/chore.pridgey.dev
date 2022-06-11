@@ -5,6 +5,7 @@ import { User } from "firebase/auth";
 import { useUser } from "./../../providers";
 import style from "./CreateFamily.module.css";
 import { Button, ImageBanner, Input } from "./../";
+import { v4 } from "uuid";
 
 type FamilyProps = {
   User: User | any;
@@ -70,7 +71,7 @@ export const CreateFamily = (props: FamilyProps) => {
 
             // Create a family doc
             setDoc(doc(db, "/family", familyName()), {
-              fid: props.User.uid,
+              fid: v4(),
               Parent: props.User.uid,
               FamilyName: familyName(),
               FamilyMembers: [props.User.uid],

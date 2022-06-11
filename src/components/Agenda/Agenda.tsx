@@ -68,7 +68,7 @@ export const Agenda = () => {
               Cadence={t.ChoreFrequency}
               LastUser={t.LastUser}
               ChoreName={t.ChoreName}
-              LastCompleted={t.LastCompleted || "Never"}
+              LastCompleted={t.LastCompleted}
               OnClick={() => {
                 const currentChores = JSON.parse(JSON.stringify([...chores()]));
                 const thisChore = currentChores.find(
