@@ -1,19 +1,26 @@
 .container {
-  display: grid;
-  grid-template-columns: min-content 1fr min-content;
-  grid-template-rows: min-content min-content min-content;
-  grid-template-areas: "icon title edit" "icon subtitle edit" "icon cadence edit";
-  align-items: center;
-  justify-items: flex-start;
-  border: 0px;
-  background-color: transparent;
-  gap: 0px calc(var(--spacing) * 2);
   box-shadow: var(--shadow);
   border: 1px solid var(--platinum);
   background-color: var(--offwhite);
   border-radius: var(--spacing);
   padding: var(--spacing);
   box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: var(--spacing);
+}
+
+.chorewrapper {
+  display: grid;
+  grid-template-columns: min-content 1fr min-content;
+  grid-template-rows: min-content min-content min-content;
+  grid-template-areas: "icon title edit" "icon subtitle edit" "icon cadence edit";
+  align-items: center;
+  justify-items: flex-start;
+  background-color: transparent;
+  gap: 0px calc(var(--spacing) * 2);
+  border: 0px;
 }
 
 .indicator {
@@ -23,6 +30,11 @@
   height: 20px;
   aspect-ratio: 1;
   grid-area: icon;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: var(--offwhite);
 }
 
 .complete {
@@ -53,4 +65,12 @@
   margin: 0;
   grid-area: cadence;
   text-align: left;
+}
+
+.editbutton {
+  background: transparent;
+  width: 50px;
+  border: 0px;
+  border-radius: var(--spacing);
+  font-size: 1.2rem;
 }

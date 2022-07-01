@@ -37,6 +37,18 @@
   margin: 0;
 }
 
+.dialogtext {
+  font-family: var(--font);
+  font-size: 1.2rem;
+  margin: 0;
+  word-break: break-word;
+  max-width: 75vw;
+}
+
+.dangertext {
+  color: var(--orange);
+}
+
 .close {
   font-family: var(--font);
   font-weight: 600;
@@ -46,4 +58,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  aspect-ratio: 1;
+}
+
+.fullbuttonbar {
+  grid-template-columns: 1fr;
+}
+
+.buttonbar {
+  display: grid;
+  grid-template-columns: 75px 1fr;
+  grid-template-rows: min-content;
+  gap: var(--spacing);
 }

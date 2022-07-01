@@ -1,5 +1,5 @@
-import { AddAgenda } from "..";
-import { createSignal, Show, For, createEffect } from "solid-js";
+import { ChoreDialog } from "..";
+import { createSignal, Show, For, createEffect, Match, Switch } from "solid-js";
 import { useUser } from "./../../providers";
 import { useFirestore } from "solid-firebase";
 import { collection, getFirestore, doc, updateDoc } from "firebase/firestore";
@@ -8,21 +8,32 @@ import { Cadence } from "./../../constants";
 import { DateTime } from "luxon";
 import { Button, Chore, ImageBanner, Sticky } from "./../";
 import style from "./Agenda.module.css";
+import { ChoreType } from "../../types";
 
 export const Agenda = () => {
+  // State to show or hide the dialog modal
   const [showAddDialog, setShowAddDialog] = createSignal(false);
 
-  const [toDo, setToDo] = createSignal<any[]>([]);
-  const [done, setDone] = createSignal<any[]>([]);
+  // State that holds chores in the To Do category and in the Done category
+  const [toDo, setToDo] = createSignal<ChoreType[]>([]);
+  const [done, setDone] = createSignal<ChoreType[]>([]);
 
-  const [chores, setChores] = createSignal<any[]>([]);
+  // State of all the chores of the family
+  const [chores, setChores] = createSignal<ChoreType[]>([]);
 
+  // State for the chore that is currently being edited
+  const [choreToEdit, setChoreToEdit] = createSignal<ChoreType>();
+
+  // The user of the session
   const { userState } = useUser();
-  const { container, chorelist } = style;
+
+  // Grab the style class names
+  const { container, chorelist, choretitle } = style;
 
   const db = getFirestore();
   const families = useFirestore(collection(db, "/family"));
 
+  // The main lifecycle of this component, fetchs chores and sorts them into the proper categories
   createEffect(() => {
     if (!families.loading && families.data) {
       const choreAgenda: any[] =
@@ -62,57 +73,80 @@ export const Agenda = () => {
       <ImageBanner ImageSrc="agendabg.jpg" Text="Agenda" />
       <div class={chorelist}>
         {/* To-Do */}
-        <For each={toDo()}>
-          {(t) => (
-            <Chore
-              Cadence={t.ChoreFrequency}
-              LastUser={t.LastUser}
-              ChoreName={t.ChoreName}
-              LastCompleted={t.LastCompleted}
-              OnClick={() => {
-                const currentChores = JSON.parse(JSON.stringify([...chores()]));
-                const thisChore = currentChores.find(
-                  (c: any) => c.ChoreID === t.ChoreID
-                );
+        <Show when={toDo().length}>
+          <h2 class={choretitle}>To-Do</h2>
+          <For each={toDo()}>
+            {(t) => (
+              <Chore
+                Cadence={t.ChoreFrequency.toString()}
+                LastUser={t.LastUser}
+                ChoreName={t.ChoreName}
+                LastCompleted={t.LastCompleted}
+                OnEdit={() => {
+                  setChoreToEdit(t);
+                  setShowAddDialog(true);
+                }}
+                OnClick={() => {
+                  const currentChores = JSON.parse(
+                    JSON.stringify([...chores()])
+                  );
+                  const thisChore = currentChores.find(
+                    (c: any) => c.ChoreID === t.ChoreID
+                  );
 
-                if (thisChore) {
-                  // set it to today
-                  thisChore.LastCompleted =
-                    DateTime.local().toFormat("yyyy-MM-dd");
-                  // By this user
-                  thisChore.LastUser = userState().Name;
+                  if (thisChore) {
+                    // set it to today
+                    thisChore.LastCompleted =
+                      DateTime.local().toFormat("yyyy-MM-dd");
+                    // By this user
+                    thisChore.LastUser = userState().Name;
 
-                  updateDoc(doc(db, "/family", userState().FamilyName), {
-                    Chores: [...currentChores],
-                  });
-                } else {
-                  // Throw an error!
-                  // Toasts would be good
-                }
-              }}
-            />
-          )}
-        </For>
+                    updateDoc(doc(db, "/family", userState().FamilyName), {
+                      Chores: [...currentChores],
+                    });
+                  } else {
+                    // Throw an error!
+                    // Toasts would be good
+                  }
+                }}
+              />
+            )}
+          </For>
+        </Show>
         {/* Done Chores */}
-        <For each={done()}>
-          {(d) => (
-            <Chore
-              Cadence={d.ChoreFrequency}
-              Completed={true}
-              ChoreName={d.ChoreName}
-              LastCompleted={d.LastCompleted || "Never"}
-              LastUser={d.LastUser}
-            />
-          )}
-        </For>
+        <Show when={done().length}>
+          <h2 class={choretitle}>Completed</h2>
+          <For each={done()}>
+            {(d) => (
+              <Chore
+                Cadence={d.ChoreFrequency.toString()}
+                Completed={true}
+                ChoreName={d.ChoreName}
+                LastCompleted={d.LastCompleted || "Never"}
+                LastUser={d.LastUser}
+                OnEdit={() => {
+                  setChoreToEdit(d);
+                  setShowAddDialog(true);
+                }}
+              />
+            )}
+          </For>
+        </Show>
       </div>
       <Sticky Bottom="0px">
         <Button OnClick={() => setShowAddDialog(true)}>Add New Chore</Button>
       </Sticky>
       <Show when={showAddDialog()}>
-        <AddAgenda
-          OnClose={() => setShowAddDialog(false)}
-          OnComplete={() => setShowAddDialog(false)}
+        <ChoreDialog
+          Chore={choreToEdit()}
+          OnClose={() => {
+            setChoreToEdit();
+            setShowAddDialog(false);
+          }}
+          OnComplete={() => {
+            setChoreToEdit();
+            setShowAddDialog(false);
+          }}
         />
       </Show>
     </div>

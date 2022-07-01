@@ -13,3 +13,9 @@
   gap: var(--spacing);
   padding: var(--spacing);
 }
+
+.choretitle {
+  width: 100%;
+  text-align: center;
+  margin: 0px;
+}

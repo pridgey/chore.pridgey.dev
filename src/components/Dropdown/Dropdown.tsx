@@ -12,6 +12,7 @@ type DropdownProps = {
   Options: DropdownOption[];
   Placeholder?: string;
   OnChange: (newValue: DropdownOption) => void;
+  SelectedID?: string;
 };
 
 export const Dropdown = (props: DropdownProps) => {
@@ -36,7 +37,11 @@ export const Dropdown = (props: DropdownProps) => {
           Select Chore Frequency
         </option>
         <For each={props.Options}>
-          {(c) => <option value={c.id}>{c.display}</option>}
+          {(c) => (
+            <option selected={c.id === props.SelectedID} value={c.id}>
+              {c.display}
+            </option>
+          )}
         </For>
       </select>
     </label>
