@@ -17,17 +17,12 @@ const App = () => {
   const auth = getAuth();
   const authState = useAuth(auth);
 
-  const { userState, updateUser } = useUser();
+  const { userState } = useUser();
 
   // If we are not loading, there's no data, and no errors, let's try to log in
   createEffect(() => {
     if (!authState.loading && !authState.data && !authState.error) {
-      signInWithRedirect(auth, new GoogleAuthProvider()).then((r) =>
-        updateUser(r.user.displayName || "", r.user.uid)
-      );
-      // signInWithPopup(auth, new GoogleAuthProvider()).then((r) =>
-      //   updateUser(r.user.displayName || "", r.user.uid)
-      // );
+      signInWithRedirect(auth, new GoogleAuthProvider());
     }
   });
 

@@ -28,7 +28,7 @@ export const Agenda = () => {
   const { userState } = useUser();
 
   // Grab the style class names
-  const { container, chorelist, choretitle } = style;
+  const { container, chorelist, choretitle, emptystate } = style;
 
   const db = getFirestore();
   const families = useFirestore(collection(db, "/family"));
@@ -72,6 +72,24 @@ export const Agenda = () => {
     <div class={container}>
       <ImageBanner ImageSrc="agendabg.jpg" Text="Agenda" />
       <div class={chorelist}>
+        <Show when={!toDo().length && !done().length}>
+          <div class={emptystate}>
+            <h2 class={choretitle}>Welcome to your Agenda</h2>
+            <span>Looks like there are no chores yet. If only.</span>
+            <span>
+              Tap the button below to add a new chore. Each chore need only be
+              added once, it will automatically refresh its status at the end of
+              its frequency.
+            </span>
+            <span>
+              If you need to invite family members to this agenda, send them the
+              link below:
+            </span>
+            <span>{`${window.location.origin}?fid=${
+              userState().FamilyID
+            }`}</span>
+          </div>
+        </Show>
         {/* To-Do */}
         <Show when={toDo().length}>
           <h2 class={choretitle}>To-Do</h2>
