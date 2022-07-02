@@ -1,5 +1,10 @@
 import { Switch, Match, createEffect, onMount } from "solid-js";
-import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  getAuth,
+  signInWithPopup,
+  signInWithRedirect,
+} from "firebase/auth";
 import { useAuth, useFirestore } from "solid-firebase";
 import { FamilySwitch, Header, Loading } from "./components";
 import { useUser } from "./providers";
@@ -17,9 +22,12 @@ const App = () => {
   // If we are not loading, there's no data, and no errors, let's try to log in
   createEffect(() => {
     if (!authState.loading && !authState.data && !authState.error) {
-      signInWithPopup(auth, new GoogleAuthProvider()).then((r) =>
+      signInWithRedirect(auth, new GoogleAuthProvider()).then((r) =>
         updateUser(r.user.displayName || "", r.user.uid)
       );
+      // signInWithPopup(auth, new GoogleAuthProvider()).then((r) =>
+      //   updateUser(r.user.displayName || "", r.user.uid)
+      // );
     }
   });
 
