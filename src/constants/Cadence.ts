@@ -14,9 +14,7 @@ export const Cadence: { [key: string]: CadenceProps } = {
   bidaily: {
     DisplayName: "Every Other Day",
     IsDone: (LC: DateTime, Today: DateTime) => {
-      console.log({ LC, Today });
-      console.log("Diff", Today.diff(LC, "days"));
-      return Today.diff(LC, "days").days === 1;
+      return Today.diff(LC, "days").days <= 1;
     },
   },
   weekly: {
