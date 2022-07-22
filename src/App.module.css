@@ -14,6 +14,13 @@ body {
   background-color: var(--white);
 }
 
+@media only screen and (min-width: 1000px) {
+  body {
+    padding: 0px 20%;
+    background-color: var(--white);
+  }
+}
+
 h1 {
   font-family: "Plus Jakarta Sans", sans-serif;
 }
